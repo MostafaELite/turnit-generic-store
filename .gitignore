@@ -1,0 +1,10 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+*.vsidx
+/.vs/ProjectEvaluation
+/.vs/Turnit.GenericStore/config
+/.vs/Turnit.GenericStore/DesignTimeBuild
+/.vs/Turnit.GenericStore/v17
