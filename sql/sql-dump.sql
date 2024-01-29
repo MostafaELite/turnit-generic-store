@@ -114,7 +114,7 @@ ALTER TABLE public.product_availability OWNER TO postgres;
 --
 
 CREATE TABLE public.product_category (
-    id uuid NOT NULL,
+    id uuid NOT NULL DEFAULT gen_random_uuid (),
     product_id uuid NOT NULL,
     category_id uuid NOT NULL
 );

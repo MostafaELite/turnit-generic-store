@@ -11,9 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Turnit.Persistence", "Turnit.Persistence\Turnit.Persistence.csproj", "{D8EF0C11-88C3-4BC5-BD05-12C46A495E42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Turnit.Persistence", "Turnit.Persistence\Turnit.Persistence.csproj", "{D8EF0C11-88C3-4BC5-BD05-12C46A495E42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurnitStore.Domain", "TurnitStore.Domain\TurnitStore.Domain.csproj", "{228E88B3-F7F5-4AA2-840E-A66655213527}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TurnitStore.Domain", "TurnitStore.Domain\TurnitStore.Domain.csproj", "{228E88B3-F7F5-4AA2-840E-A66655213527}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

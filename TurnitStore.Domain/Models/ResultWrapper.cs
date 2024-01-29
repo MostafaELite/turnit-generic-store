@@ -1,6 +1,8 @@
-﻿namespace TurnitStore.Domain.Models
+﻿using TurnitStore.Domain.Enums;
+
+namespace TurnitStore.Domain.Models
 {
-    public class ResultWrapper<TResult>
+    public record ResultWrapper<TResult>
     {
         public ResultStatus Status { get; private set; }
 
@@ -19,15 +21,5 @@
             Message = message,
             Status = status,
         };
-
     }
-
-    public enum ResultStatus
-    {
-        Success,
-        NotFound,
-        ShouldNotComplete,
-        Insufficient
-    }
-
 }

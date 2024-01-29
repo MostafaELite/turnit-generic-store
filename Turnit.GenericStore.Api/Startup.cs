@@ -16,21 +16,16 @@ using TurnitStore.Domain.Services;
 
 namespace Turnit.GenericStore.Api
 {
-    public class Startup
+    public class Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; } = configuration;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
 
-            services.AddScoped(CreateSessionFactory);
+            services.AddSingleton(CreateSessionFactory);
             services.AddScoped(sp => sp.GetRequiredService<ISessionFactory>().OpenSession());
 
             RegisterRepos(services);
@@ -48,27 +43,7 @@ namespace Turnit.GenericStore.Api
         private void RegisterServices(IServiceCollection services)
         {            
             services.AddScoped<IProductService, ProductService>();
-        }
-
-        private void RegisterRepos(IServiceCollection services)
-        {
-            services.AddScoped<IProductRepo, ProductRepo>();
-            services.AddScoped<ICategoryRepo, CategoryRepo>();
-        }
-
-        private ISessionFactory CreateSessionFactory(IServiceProvider context)
-        {
-            var connectionString = Configuration.GetConnectionString("Default");
-            var configuration = Fluently.Configure()
-                .Database(PostgreSQLConfiguration.PostgreSQL82
-                    .Dialect<NHibernate.Dialect.PostgreSQL82Dialect>()
-                    .ConnectionString(connectionString))
-                .Mappings(x =>
-                {
-                    x.FluentMappings.AddFromAssemblyOf<CategoryMap>();
-                });
-
-            return configuration.BuildSessionFactory();
+            services.AddScoped<IStoreService, StoreService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,6 +67,28 @@ namespace Turnit.GenericStore.Api
                 endpoints.MapControllers();
                 endpoints.MapSwagger();
             });
+        }
+
+        private void RegisterRepos(IServiceCollection services)
+        {
+            services.AddScoped<IProductRepo, ProductRepo>();
+            services.AddScoped<ICategoryRepo, CategoryRepo>();
+            services.AddScoped<IStoreRepo, StoreRepo>();
+        }
+
+        private ISessionFactory CreateSessionFactory(IServiceProvider context)
+        {
+            var connectionString = Configuration.GetConnectionString("Default");
+            var configuration = Fluently.Configure()
+                .Database(PostgreSQLConfiguration.PostgreSQL82
+                    .Dialect<NHibernate.Dialect.PostgreSQL82Dialect>()
+                    .ConnectionString(connectionString))
+                .Mappings(x =>
+                {
+                    x.FluentMappings.AddFromAssemblyOf<CategoryMap>();
+                });
+
+            return configuration.BuildSessionFactory();
         }
     }
 }

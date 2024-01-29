@@ -1,10 +1,13 @@
-﻿using TurnitStore.Domain.Entities;
+﻿using Turnit.GenericStore.Api.Features.Sales.Models;
+using TurnitStore.Domain.Entities;
+using TurnitStore.Domain.Enums;
 using TurnitStore.Domain.Models;
 using TurnitStore.Domain.RepositoryInterfaces;
 
 namespace TurnitStore.Domain.Services
 {
-    public class ProductService(IProductRepo repo) : IProductService
+    //Services shouldn't directly consume other services repo, but no time to add a category service
+    public class ProductService(IProductRepo repo, ICategoryRepo categories) : IProductService
     {
         public async Task<ResultWrapper<Product>> AssociateToCategory(Guid productId, Guid categoryId)
         {
@@ -13,12 +16,15 @@ namespace TurnitStore.Domain.Services
             //TODO: FLUSH
             //These string can be read from a static file or resources
             if (product.Categories.Any(cat => cat.Id == categoryId))
-                return ResultWrapper<Product>.Faliure(ResultStatus.ShouldNotComplete, $"The category with the id {categoryId} is already assoicated with the product id {productId}");
+                return ResultWrapper<Product>.Faliure(
+                    ResultStatus.ShouldNotComplete,
+                    $"The category with the id {categoryId} is already assoicated with the product id {productId}");
 
-            var category = await repo.GetCategory(categoryId);
+            var category = await categories.GetCategory(categoryId, true);
             if (category is null)
                 return ResultWrapper<Product>.Faliure(ResultStatus.NotFound, $"Unable to find the category {categoryId}");
 
+            //Should be moved to product entity
             product.Categories.Add(category);
             await repo.Update(product);
 
@@ -34,43 +40,36 @@ namespace TurnitStore.Domain.Services
             if (categoryToRemove is null)
                 return ResultWrapper<Product>.Faliure(ResultStatus.NotFound, $"The category with the id {categoryId} is not assoicated with the product id {productId}");
 
+            //Should be moved to product entity
             product.Categories.Remove(categoryToRemove);
             await repo.Update(product);
 
             return ResultWrapper<Product>.Success(product);
         }
 
-        public async Task<ResultWrapper<IEnumerable<OrderDetails>>> Book(Guid productId, int desiredQuantity, Guid? perferedStoreId)
+        public async Task<ResultWrapper<Product>> Book(Guid productId, IEnumerable<ProductBookingDto> bookings)
         {
             var product = await repo.GetProduct(productId);
 
-            if (perferedStoreId is not null)
+            foreach (var booking in bookings)
             {
-                var perferedStore = product.Availability.FirstOrDefault(a => a.Store.Id == perferedStoreId);
-                desiredQuantity = perferedStore is null ? desiredQuantity : perferedStore.Availability -= desiredQuantity;
+                var availabilityInStore = product.Availability.FirstOrDefault(availability => availability.Store.Id == booking.StoreId);
+
+                if (availabilityInStore is null || availabilityInStore.Availability < booking.Quantity)
+                    return ResultWrapper<Product>.Faliure(
+                        ResultStatus.Insufficient,
+                        $"Unable to book {booking.Quantity} from store {booking.StoreId}, only {availabilityInStore?.Availability} items were left");
+
+                availabilityInStore.BookProduct(booking.Quantity);
             }
-
-            var orderDetails = new List<OrderDetails>();
-
-            //Not mentioned in the req, but we may need to sort desc by availablity to keep the product distrubtion across different stores
-            foreach (var storeAvailablity in product.Availability)
-            {
-                if (desiredQuantity == 0)
-                    break;
-
-                var storeBookableQuantity = Math.Min(desiredQuantity, storeAvailablity.Availability);
-
-                storeAvailablity.BookProduct(storeBookableQuantity);
-                desiredQuantity -= storeBookableQuantity;
-
-                orderDetails.Add(new OrderDetails(storeAvailablity.Id, storeBookableQuantity));
-            }
-
-            if (desiredQuantity > 0)
-                return ResultWrapper<IEnumerable<OrderDetails>>.Faliure(ResultStatus.Insufficient, "You are asking for tooo much mate :P :D");
 
             await repo.Update(product);
-            return ResultWrapper<IEnumerable<OrderDetails>>.Success(orderDetails);
+            return ResultWrapper<Product>.Success(product);
         }
+
+        public async Task<IEnumerable<Product>> GetUncategorizedProducts() => await repo.GetUncategorizedProducts();
+
+        
+        public Task<Product> GetById(Guid productId) => throw new NotImplementedException();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using NHibernate;
+using NHibernate.Linq;
 using Turnit.GenericStore.Api.Entities;
 using TurnitStore.Domain.Entities;
 using TurnitStore.Domain.RepositoryInterfaces;
@@ -29,13 +30,21 @@ namespace Turnit.Persistence.Repositories
             return product;
         }
 
+        public async Task<IEnumerable<Product>> GetUncategorizedProducts()
+        {
+            var products = await session.Query<Product>()
+               .Where(p => p.Categories.Count == 0)
+               .ToListAsync();
+
+            return products;
+        }
+
         public async Task<Product> Update(Product product)
         {
-            using (var transaction = session.BeginTransaction())
-            {
-                await session.SaveOrUpdateAsync(product);
-                transaction.Commit();
-            }
+            using var transaction = session.BeginTransaction();
+            await session.SaveOrUpdateAsync(product);
+            transaction.Commit();
+
             return product;
 
         }

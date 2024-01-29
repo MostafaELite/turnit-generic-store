@@ -1,5 +1,5 @@
-using System.Linq;
 using System.Threading.Tasks;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Turnit.GenericStore.Api.Models;
 using Turnit.GenericStore.Api.Shared;
@@ -14,15 +14,8 @@ public class CategoriesController(ICategoryRepo repo) : ApiControllerBase
     public async Task<CategoryModel[]> AllCategories()
     {
         var categories = await repo.GetCategories();
+        var apiCategories = categories.Adapt<CategoryModel[]>();      
 
-        var result = categories
-            .Select(x => new CategoryModel
-            {
-                Id = x.Id,
-                Name = x.Name
-            })
-            .ToArray();
-
-        return result;
+        return apiCategories;
     }
 }

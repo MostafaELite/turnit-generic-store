@@ -7,9 +7,13 @@ public class StoreMap : ClassMap<Store>
     public StoreMap()
     {
         Schema("public");
-        Table("product");
+        Table("store");
 
         Id(x => x.Id, "id");
         Map(x => x.Name, "name");
+
+        HasMany(store => store.ProductAvailability)
+            .Cascade
+            .SaveUpdate();
     }
 }

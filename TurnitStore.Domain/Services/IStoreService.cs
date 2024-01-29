@@ -1,9 +1,10 @@
-﻿using TurnitStore.Domain.Models;
+﻿using Turnit.GenericStore.Api.Entities;
+using TurnitStore.Domain.Models;
 
 namespace TurnitStore.Domain.Services
 {
     public interface IStoreService
     {
-        Task<ResultWrapper<OrderDetails>> RestockAsync(Guid storeId, int quantity);
+        Task<ResultWrapper<ProductAvailability>> RestockAsync(Guid storeId, Guid productId, int quantity);
     }
 }

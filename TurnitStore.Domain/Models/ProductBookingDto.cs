@@ -2,10 +2,10 @@
 
 namespace Turnit.GenericStore.Api.Features.Sales.Models
 {
-    public class ProductBookingRequest
+    public class ProductBookingDto
     {
         public int Quantity { get; set; }
 
-        public Guid? PerferedStoreId { get; set; }
+        public Guid StoreId { get; set; }
     }
 }

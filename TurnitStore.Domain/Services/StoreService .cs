@@ -1,24 +1,42 @@
 ﻿
+using Turnit.GenericStore.Api.Entities;
+using TurnitStore.Domain.Enums;
 using TurnitStore.Domain.Models;
 using TurnitStore.Domain.RepositoryInterfaces;
 
 namespace TurnitStore.Domain.Services
 {
-    public class StoreService(IStoreRepo repo) : IStoreService
+    public class StoreService(IStoreRepo repo, IProductService products) : IStoreService
     {
-        public async Task<ResultWrapper<OrderDetails>> RestockAsync(Guid storeId, int quantity)
+        public async Task<ResultWrapper<ProductAvailability>> RestockAsync(Guid storeId, Guid productId, int quantity)
         {
             var store = await repo.GetStore(storeId);
             if (store is null)
-                return ResultWrapper<OrderDetails>.Faliure(ResultStatus.NotFound, $"The store {storeId} is not found");
+                return ResultWrapper<ProductAvailability>.Faliure(ResultStatus.NotFound, $"The store {storeId} is not found");
 
 
-            foreach (var product in store.ProductAvailability)
-                product.Availability += quantity;
+            var productAvailablity = await EnsureProductInStore(store, productId);
+            productAvailablity.StockProduct(quantity);
 
             await repo.UpdateStore(store);
 
-            return ResultWrapper<OrderDetails>.Success(null);
+            return ResultWrapper<ProductAvailability>.Success(productAvailablity);
+        }
+
+        private async Task<ProductAvailability> EnsureProductInStore(Store store, Guid productId)
+        {
+            var productAvailablity = store.ProductAvailability.FirstOrDefault(availablity => availablity.Product.Id == productId);
+
+            if (productAvailablity is null)
+            {
+                //validate if such a product with this id even exists
+                var product = await products.GetById(productId);
+
+                productAvailablity = new ProductAvailability(store, product, 0);
+                store.ProductAvailability = store.ProductAvailability.Append(productAvailablity);
+            }
+            
+            return productAvailablity;
         }
     }
 }

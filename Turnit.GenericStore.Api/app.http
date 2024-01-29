@@ -1,0 +1,48 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+
+#GetAllProducts
+GET https://localhost:40307/v2/products/
+###
+
+#GetByCategory
+GET https://localhost:40307/v2/products/by-category/4f10a98a-e65b-11ec-a1ac-24ee9a88c06f
+###
+
+#Associate
+PUT https://localhost:40307/v2/products/6f32650e-e65c-11ec-a1b2-24ee9a88c06f/category/4f10a98d-e65b-11ec-a1af-24ee9a88c06f
+###
+
+#Disassociate
+DELETE https://localhost:40307/v2/products/6f32650e-e65c-11ec-a1b2-24ee9a88c06f/category/4f10a98d-e65b-11ec-a1af-24ee9a88c06f
+###
+
+
+#Book
+POST https://localhost:40307/v2/products/6f32650e-e65c-11ec-a1b2-24ee9a88c06f/book
+Content-Type: application/json
+
+[
+  {
+    "storeId": "89119170-e65c-11ec-a1c4-24ee9a88c06f",
+    "quantity": "5"
+  },
+  {
+    "storeId": "8911b86c-e65c-11ec-a1c5-24ee9a88c06f",
+    "quantity": "5"
+  }
+]
+
+###
+
+
+#--------------Store----------------------
+#Restock
+POST https://localhost:40307/store/8911b86c-e65c-11ec-a1c5-24ee9a88c06f/restock
+Content-Type: application/json
+
+{
+    "productId": "6f32650e-e65c-11ec-a1b2-24ee9a88c06f",
+    "quantity": 5
+}
+
+###
