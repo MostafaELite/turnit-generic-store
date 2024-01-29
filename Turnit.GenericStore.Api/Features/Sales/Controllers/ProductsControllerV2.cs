@@ -22,11 +22,12 @@ public class ProductsControllerV2(IProductService productService, ICategoryRepo 
     {
         //We might argue about who should be the parent in the relation product => category
         //this can also be achived by queryin the products Where product.Categories contains the categoryId
-        var categoriesTask = categoryRepo.GetCategories(includeProducts: true);
 
+        //Parellel queryies or merge the queries
+        var categoryProducts = await categoryRepo.GetCategories(includeProducts: true);
         var productsWithoutCategory = await productService.GetUncategorizedProducts();
 
-        var productCategoryModel = (await categoriesTask).Adapt<IEnumerable<ProductCategoryModel>>(MapperConfig.GetConfig);
+        var productCategoryModel = categoryProducts.Adapt<IEnumerable<ProductCategoryModel>>(MapperConfig.GetConfig);
 
         productCategoryModel = productCategoryModel.Append(new ProductCategoryModel
         {

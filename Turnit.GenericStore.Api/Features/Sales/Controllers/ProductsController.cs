@@ -54,7 +54,7 @@ public class ProductsController(ISession session) : ApiControllerBase
     public async Task<ProductCategoryModel[]> AllProducts()
     {
         var products = await session.QueryOver<Product>().ListAsync<Product>();
-
+        var w = session.GetHashCode();
         var productModels = new List<ProductModel>();
         foreach (var product in products)
         {
@@ -100,5 +100,5 @@ public class ProductsController(ISession session) : ApiControllerBase
         }
 
         return result.ToArray();
-    }      
+    }
 }

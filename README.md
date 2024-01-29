@@ -25,8 +25,8 @@ This is slightly different from the above, since a product availablity is a buss
 > Improve the overall code quality in `GET /products/*` methods.
 
 * Found the N+1 problem in the products controller when we fetch all products or products by category, for N number of products, we make N number of db trips to fetch their availablity, which is fixed as explained in Task 1
-* Marked the SessionFactory DI life time as  Singlton.
-* 
+* Marked the SessionFactory DI life time as Singlton since we gonna be needing only 1 factory
+* Ensure that  Nhibernate.Session is being disposed (there are plenty of ways to do it, just ended up doing something quick and hacky :D)
 
 
 ## I have tried to show:

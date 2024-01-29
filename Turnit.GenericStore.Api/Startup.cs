@@ -30,20 +30,13 @@ namespace Turnit.GenericStore.Api
 
             RegisterRepos(services);
             RegisterServices(services);
-            
+
 
             services.AddSwaggerGen(x => x.SwaggerDoc("v1", new OpenApiInfo
             {
                 Version = "v1",
                 Title = "Turnit Store"
             }));
-        }
-
-        //These two methods can be replaced with an autoscan using reflection
-        private void RegisterServices(IServiceCollection services)
-        {            
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IStoreService, StoreService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,20 +53,14 @@ namespace Turnit.GenericStore.Api
             app.UseSwagger()
                 .UseSwaggerUI(x => x.SwaggerEndpoint("v1/swagger.json", "Turnit Store V1"));
 
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapSwagger();
             });
-        }
 
-        private void RegisterRepos(IServiceCollection services)
-        {
-            services.AddScoped<IProductRepo, ProductRepo>();
-            services.AddScoped<ICategoryRepo, CategoryRepo>();
-            services.AddScoped<IStoreRepo, StoreRepo>();
+            //app.UseMiddleware<SessionDispoFilter>();
         }
 
         private ISessionFactory CreateSessionFactory(IServiceProvider context)
@@ -90,5 +77,20 @@ namespace Turnit.GenericStore.Api
 
             return configuration.BuildSessionFactory();
         }
+
+        //These two methods can be replaced with an autoscan using reflection
+        private void RegisterServices(IServiceCollection services)
+        {
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IStoreService, StoreService>();
+        }
+        private void RegisterRepos(IServiceCollection services)
+        {
+            services.AddScoped<IProductRepo, ProductRepo>();
+            services.AddScoped<ICategoryRepo, CategoryRepo>();
+            services.AddScoped<IStoreRepo, StoreRepo>();
+        }
+
+
     }
 }

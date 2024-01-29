@@ -16,7 +16,6 @@ PUT https://localhost:40307/v2/products/6f32650e-e65c-11ec-a1b2-24ee9a88c06f/cat
 DELETE https://localhost:40307/v2/products/6f32650e-e65c-11ec-a1b2-24ee9a88c06f/category/4f10a98d-e65b-11ec-a1af-24ee9a88c06f
 ###
 
-
 #Book
 POST https://localhost:40307/v2/products/6f32650e-e65c-11ec-a1b2-24ee9a88c06f/book
 Content-Type: application/json
@@ -34,8 +33,8 @@ Content-Type: application/json
 
 ###
 
+#----------------Store----------------------
 
-#--------------Store----------------------
 #Restock
 POST https://localhost:40307/store/8911b86c-e65c-11ec-a1c5-24ee9a88c06f/restock
 Content-Type: application/json
