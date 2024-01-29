@@ -60,7 +60,6 @@ namespace Turnit.GenericStore.Api
                 endpoints.MapSwagger();
             });
 
-            //app.UseMiddleware<SessionDispoFilter>();
         }
 
         private ISessionFactory CreateSessionFactory(IServiceProvider context)
