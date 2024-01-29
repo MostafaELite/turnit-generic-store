@@ -43,11 +43,11 @@ This is slightly different from the above, since a product availablity is a buss
 * The Entity mapping of Store was wrong, it mapped to the product table, https://gitlab.tsolutions.co/external/practice-exercises/turnit-generic-store/-/blob/master/Turnit.GenericStore.Api/Entities/Store.cs#L18
 * Changed the LauchProfile "API" to display the swagger on start to ease the testing
 * The addition of a db docker image is really helpful and I like it, but I am not sure about the value added by docker compose and dockerizing the API itself, in most cases the candidate will be developing/debugging the API, meaning that they will probably be using their IDE
+* The get stores endpoint mentioned in the task repo's readme, but it doesn't exits on nor it was part of the assigments, so I simply ignored it
 
 
 
 ## My ToDos:
-* Edit the sql script to make the ProductCategory table's PK auto generated gen_random_uuid ()
 * Better encapsulation
 * Add different models for Persistence and Domain, and introduce more encapsulation
 * Rename Turnit.Persistence to TurnitStore.Persistence
