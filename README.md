@@ -26,13 +26,12 @@ This is slightly different from the above, since a product availablity is a buss
 
 * Found the N+1 problem in the products controller when we fetch all products or products by category, for N number of products, we make N number of db trips to fetch their availablity, which is fixed as explained in Task 1
 * Marked the SessionFactory DI life time as Singlton since we gonna be needing only 1 factory
-* Ensure that  Nhibernate.Session is being disposed (there are plenty of ways to do it, just ended up doing something quick and hacky :D)
+* Ensure that Nhibernate.Session is being disposed (there are plenty of ways to do it, just ended up doing something quick and hacky :D)
 
 
 ## I have tried to show:
-* Familiarity with the common components/patterns for similar APIs, like repos/domain services.
-* Separation of concerns and modularity by splitting the solution into multiple projects, following a domain-centric approach.
-* Staying up to date with the latest releases of the language and its features, as shown by the excessive usage of the primary constructor :D :P.
+* Separation of concerns and modularity of design by splitting the solution into multiple projects, following a domain-centric approach.
+* Staying up to date with the latest releases of the language and its features(pumped up the api to latest .NET version, along with the used libs), as shown by the excessive usage of the primary constructor :D :P.
 * Basic understanding of Docker displayed through the changes made to be able to build a multi-project solution.
 * Utilization of deferred execution and polymorphism to reduce code duplicate, showen with the CategoryRepo ProductCategoryQuery.
 * The ability to rapidly get up and running with a framework that hasn't been worked with (at least in ages :D), talking about Nhibernate here.
@@ -52,5 +51,5 @@ This is slightly different from the above, since a product availablity is a buss
 * Better encapsulation
 * Add different models for Persistence and Domain, and introduce more encapsulation
 * Rename Turnit.Persistence to TurnitStore.Persistence
-* Better discoverability thorough swagger and uniyfing the response type(perhaps ActionResult<T> for specficity)
+* Better discoverability through swagger and unifying the response type(perhaps ActionResult<T> for specficity)
 
